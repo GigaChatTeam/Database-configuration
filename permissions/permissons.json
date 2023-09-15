@@ -1,17 +1,32 @@
 {
-  "0.0.0.0": "@system/notAuthorized",
-  "0.0.0.1": "@system/notDetermined",
+  "0": {
+    "0": {
+      "0": {
+        "0": "@system/notAuthorized",
+        "1": "@system/notDetermined"
+      }
+    }
+  },
   "2": {
     "0": {
-      "1.1": "@channels/messages/your/post",
-      "1.2": "@channels/messages/your/edit",
-      "1.3": "@channels/messages/your/delete",
-      "1.40": "@channels/messages/your/forward/in",
-      "1.410": "@channels/messages/your/forward/out",
-      "1.411": "@channels/messages/their/forward/out"
+      "1": {
+        "1": "@channels/messages/your/post",
+        "2": "@channels/messages/your/edit",
+        "3": "@channels/messages/your/delete",
+        "40": "@channels/messages/forward/in",
+        "410": "@channels/messages/your/forward/out",
+        "411": "@channels/messages/their/forward/out"
+      },
+      "3": {
+        "1": "@channels/messages/your/attachments/post",
+        "2": "@channels/messages/your/attachments/reorganize",
+        "3": "@channels/messages/your/attachments/delete"
+      }
     },
     "1": {
-      "1.3": "@channels/messages/their/delete"
+      "1": {
+        "3": "@channels/messages/their/delete"
+      }
     }
   }
 }
