@@ -6,7 +6,7 @@ CREATE TABLE public.accounts (
     email TEXT UNIQUE,
     emails TEXT[],
     phone TEXT UNIQUE,
-    created TIMESTAMP NOT NULL,
+    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     deleted BOOLEAN DEFAULT FALSE
 )
 

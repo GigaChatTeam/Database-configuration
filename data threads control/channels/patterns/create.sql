@@ -17,13 +17,13 @@ CREATE TABLE channels.messages_%d (
     response_to INTEGER,
     forwarding_from INTEGER[3],
     user_time TIMESTAMP,
-    server_time TIMESTAMP DEFAULT now(),
+    server_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (client) REFERENCES public.accounts (id)
 )
 
 CREATE TABLE channels.permissions_%d (
     client INTEGER NOT NULL DEFAULT 0,
-    permission INTEGER NOT NULL,
+    permission INTEGER[4] NOT NULL,
     status BOOLEAN,
     FOREIGN KEY (client) REFERENCES public.accounts (id),
     FOREIGN KEY (permission) REFERENCES public.permissions (id)
@@ -31,6 +31,6 @@ CREATE TABLE channels.permissions_%d (
 
 CREATE TABLE channels.logs_%d (
     server_time TIMESTAMP,
-    db_time TIMESTAMP DEFAULT now(),
+    db_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data JSON
 )
