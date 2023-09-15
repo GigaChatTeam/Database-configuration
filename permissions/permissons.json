@@ -8,10 +8,12 @@
       "1.3": "@channels/messages/your/delete",
       "1.40": "@channels/messages/your/forward/in",
       "1.410": "@channels/messages/your/forward/out",
-      "1.411": "@channels/messages/their/forward/out"
+      "1.411": "@channels/messages/their/forward/out",
+      "5.1": "@channels/users/control/add"
     },
     "1": {
-      "1.3": "@channels/messages/their/delete"
+      "1.3": "@channels/messages/their/delete",
+      "5.1": "@channels/users/control/kick"
     }
   }
 }
