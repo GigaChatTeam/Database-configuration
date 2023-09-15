@@ -13,9 +13,8 @@
         "1": "@channels/messages/your/post",
         "2": "@channels/messages/your/edit",
         "3": "@channels/messages/your/delete",
-        "40": "@channels/messages/forward/in",
-        "410": "@channels/messages/your/forward/out",
-        "411": "@channels/messages/their/forward/out"
+        "41": "@channels/messages/forward/in",
+        "42": "@channels/messages/forward/out"
       },
       "3": {
         "1": "@channels/messages/your/attachments/post",
@@ -26,6 +25,10 @@
     "1": {
       "1": {
         "3": "@channels/messages/their/delete"
+      },
+      "5": {
+        "1": "@channels/users/control/add",
+        "2": "@channels/users/control/kick"
       }
     }
   }
