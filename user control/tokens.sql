@@ -1,18 +1,20 @@
+-- This table stores information about the tokens of permanent and full access to the account
 CREATE TABLE public.tokens (
-    client BIGINT NOT NULL,
+    client NUMERIC NOT NULL,
     agent TEXT NOT NULL,
     token TEXT NOT NULL,
-    last_login TIMESTAMP,
+    logins JSONB[],
     start TIMESTAMP NOT NULL,
     ending TIMESTAMP,
     FOREIGN KEY (client) REFERENCES public.accounts (id)
 )
 
+-- This table stores information about temporary restricted access token on behalf of the account
 CREATE TABLE public.ttokens (
-    client BIGINT NOT NULL,
+    client NUMERIC NOT NULL,
     token TEXT NOT NULL,
     hashed BOOL NOT NULL DEFAULT FALSE,
-    extradition TIMESTAMP NOT NULL DEFAULT now(),
+    extradition TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     intentions TEXT[] NOT NULL,
     blocked TIMESTAMP,
     reason TEXT,
