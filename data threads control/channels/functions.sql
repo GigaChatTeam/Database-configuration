@@ -17,7 +17,7 @@ BEGIN
 
     RETURN channel_id;
 END;
-$$ LANGUAGE plpgsql
+$$ LANGUAGE plpgsql;
 
 CREATE FUNCTION public.channels_join_user (client BIGINT, target_channel BIGINT, invitation TEXT)
 RETURNS BOOLEAN AS $$
@@ -40,4 +40,30 @@ BEGIN
         RETURN FALSE;
     END IF;
 END;
-$$ LANGUAGE plpgsql
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION public.channels_messages_post_new (author BIGINT, alias CHAR(32), target_channel BIGINT, message_text TEXT)
+RETURNS BIGINT AS $$
+DECLARE
+    message_id BIGINT;
+BEGIN
+    INSERT INTO public.channels_messages (channel, posted, author, alias, type, data)
+    VALUES (target_channel, now(), author, alias, 'text message', message_text)
+    RETURNING id INTO message_id;
+
+    RETURN message_id;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION public.channels_messages_post_new (author BIGINT, target_channel BIGINT, message_text TEXT)
+RETURNS BIGINT AS $$
+DECLARE
+    message_id BIGINT;
+BEGIN
+    INSERT INTO public.channels_messages (channel, posted, author, type, data)
+    VALUES (target_channel, now(), author, 'text message', message_text)
+    RETURNING id INTO message_id;
+
+    RETURN message_id;
+END;
+$$ LANGUAGE plpgsql;
