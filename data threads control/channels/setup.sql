@@ -46,3 +46,13 @@ CREATE TABLE public.channels_users_permissions (
     FOREIGN KEY (channel) REFERENCES public.channels (id),
     FOREIGN KEY (permission) REFERENCES public.permissions (id)
 );
+
+CREATE TABLE public.channels_invitations (
+    creator BIGINT NOT NULL,
+    channel BIGINT NOT NULL,
+    uri TEXT UNIQUE NOT NULL,
+    created TIMESTAMP NOT NULL,
+    PRIMARY KEY (creator, channel, uri),
+    FOREIGN KEY (creator) REFERENCES public.accounts (id),
+    FOREIGN KEY (channel) REFERENCES public.channels (id)
+);
