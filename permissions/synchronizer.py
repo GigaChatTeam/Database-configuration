@@ -21,7 +21,9 @@ def save_permissions(id, description):
     cursor.execute('''
         INSERT INTO public.permissions (id, title)
         VALUES (%s, %s)
-        ON CONFLICT (id) DO UPDATE SET title = EXCLUDED.title
+        ON CONFLICT (id)
+            DO UPDATE
+            SET title = EXCLUDED.title
     ''', (id, description))
 
     connection.commit()
