@@ -21,9 +21,10 @@ CREATE TABLE public.accounts_changes (
     FOREIGN KEY (client) REFERENCES public.accounts (id)
 );
 
+-- This table stores information about bots
 CREATE TABLE public.bots (
     client BIGINT PRIMARY KEY,
     owner BIGINT NOT NULL,
-    FOREIGN KEY (owner) REFERENCES public.accounts (id),
+    FOREIGN KEY (client) REFERENCES public.accounts (id),
     FOREIGN KEY (owner) REFERENCES public.accounts (id)
 );

@@ -1,4 +1,4 @@
-CREATE TABLE public.channels (
+CREATE TABLE channels.index (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     owner BIGINT NOT NULL,
     title TEXT NOT NULL CHECK (length(title) > 3),
@@ -8,7 +8,7 @@ CREATE TABLE public.channels (
     FOREIGN KEY (owner) REFERENCES public.accounts (id)
 );
 
-CREATE TABLE public.channels_messages (
+CREATE TABLE channels.messages (
     id BIGINT GENERATED ALWAYS AS IDENTITY,
     channel BIGINT NOT NULL,
     posted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -22,10 +22,10 @@ CREATE TABLE public.channels_messages (
     deleted_reason TEXT,
     PRIMARY KEY (id, channel),
     FOREIGN KEY (author) REFERENCES public.accounts (id),
-    FOREIGN KEY (channel) REFERENCES public.channels (id)
+    FOREIGN KEY (channel) REFERENCES channels.index (id)
 );
 
-CREATE TABLE public.channels_users (
+CREATE TABLE channels.channels_users (
     client BIGINT NOT NULL,
     channel BIGINT NOT NULL,
     joined TIMESTAMP NOT NULL,
@@ -33,26 +33,26 @@ CREATE TABLE public.channels_users (
     leaved TIMESTAMP,
     leave_reason TEXT,
     FOREIGN KEY (client) REFERENCES public.accounts (id),
-    FOREIGN KEY (channel) REFERENCES public.channels (id)
+    FOREIGN KEY (channel) REFERENCES channels.index (id)
 );
 
-CREATE TABLE public.channels_users_permissions (
+CREATE TABLE channels.users_permissions (
     client BIGINT NOT NULL,
     channel BIGINT NOT NULL,
     permission SMALLINT[4],
     status BOOLEAN,
     PRIMARY KEY (client, channel),
     FOREIGN KEY (client) REFERENCES public.accounts (id),
-    FOREIGN KEY (channel) REFERENCES public.channels (id),
+    FOREIGN KEY (channel) REFERENCES channels.index (id),
     FOREIGN KEY (permission) REFERENCES public.permissions (id)
 );
 
-CREATE TABLE public.channels_invitations (
+CREATE TABLE channels.channels_invitations (
     creator BIGINT NOT NULL,
     channel BIGINT NOT NULL,
     uri TEXT UNIQUE NOT NULL,
     created TIMESTAMP NOT NULL,
     PRIMARY KEY (creator, channel, uri),
     FOREIGN KEY (creator) REFERENCES public.accounts (id),
-    FOREIGN KEY (channel) REFERENCES public.channels (id)
+    FOREIGN KEY (channel) REFERENCES channels.index (id)
 );
