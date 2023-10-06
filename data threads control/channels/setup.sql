@@ -25,7 +25,7 @@ CREATE TABLE channels.messages (
     FOREIGN KEY (channel) REFERENCES channels.index (id)
 );
 
-CREATE TABLE channels.channels_users (
+CREATE TABLE channels.users (
     client BIGINT NOT NULL,
     channel BIGINT NOT NULL,
     joined TIMESTAMP NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE channels.users_permissions (
     FOREIGN KEY (permission) REFERENCES public.permissions (id)
 );
 
-CREATE TABLE channels.channels_invitations (
+CREATE TABLE channels.invitations (
     creator BIGINT NOT NULL,
     channel BIGINT NOT NULL,
     uri TEXT UNIQUE NOT NULL,
