@@ -50,7 +50,7 @@ CREATE TABLE channels.users_permissions (
 CREATE TABLE channels.invitations (
     creator BIGINT NOT NULL,
     channel BIGINT NOT NULL,
-    uri TEXT UNIQUE NOT NULL,
+    uri CHAR(16) UNIQUE NOT NULL DEFAULT substring(md5(public.uuid_generate_v4()::text), 0, 17),
     created TIMESTAMP NOT NULL,
     PRIMARY KEY (creator, channel, uri),
     FOREIGN KEY (creator) REFERENCES public.accounts (id),
