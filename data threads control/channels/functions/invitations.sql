@@ -26,7 +26,7 @@ RETURNS BOOLEAN AS $$
 BEGIN
     DELETE FROM channels.invitations
     WHERE
-        uri = invation_uri
+        uri = invation_uri;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -35,7 +35,7 @@ RETURNS BOOLEAN AS $$
 BEGIN
     DELETE FROM channels.invitations
     WHERE
-        channel = target_channel
+        channel = target_channel;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -45,6 +45,6 @@ BEGIN
     DELETE FROM channels.invitations
     WHERE
         creator = client AND
-        channel = target_channel
+        channel = target_channel;
 END;
 $$ LANGUAGE plpgsql;
