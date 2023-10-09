@@ -20,3 +20,31 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE FUNCTION channels.delete_invitation (invation_uri TEXT)
+RETURNS BOOLEAN AS $$
+BEGIN
+    DELETE FROM channels.invitations
+    WHERE
+        uri = invation_uri
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION channels.delete_invitation (target_channel BIGINT)
+RETURNS BOOLEAN AS $$
+BEGIN
+    DELETE FROM channels.invitations
+    WHERE
+        channel = target_channel
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION channels.delete_invitation (client BIGINT, target_channel BIGINT)
+RETURNS BOOLEAN AS $$
+BEGIN
+    DELETE FROM channels.invitations
+    WHERE
+        creator = client AND
+        channel = target_channel
+END;
+$$ LANGUAGE plpgsql;
