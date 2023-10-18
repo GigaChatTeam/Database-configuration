@@ -32,3 +32,42 @@ CREATE TABLE community.applications (
     FOREIGN KEY (client) REFERENCES public.accounts (id),
     FOREIGN KEY (community) REFERENCES community.index (id)
 );
+
+--Type of posts
+CREATE TABLE community.news(
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    author BIGINT NOT NULL,
+    community BIGINT NOT NULL,
+    consistance TEXT NOT NULL,
+    posted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted TIMESTAMP,
+    deleted_reason TEXT,
+    FOREIGN KEY (author) REFERENCES public.accounts (id),
+    FOREIGN KEY (community) REFERENCES community.index (id)
+)
+
+CREATE TABLE community.news_data(
+    news UNIQUE NOT NULL,
+    consistance TEXT NOT NULL,
+    attachment integer[3],
+    FOREIGN KEY (news) REFERENCES community.news (id)
+)
+
+CREATE TABLE community.posts(
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    author BIGINT NOT NULL,
+    community BIGINT NOT NULL,
+    consistance TEXT NOT NULL,
+    posted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted TIMESTAMP,
+    deleted_reason TEXT,
+    FOREIGN KEY (author) REFERENCES public.accounts (id),
+    FOREIGN KEY (community) REFERENCES community.index (id)
+)
+
+CREATE TABLE community.posts(
+    posts UNIQUE NOT NULL,
+    consistance TEXT NOT NULL,
+    attachment integer[3],
+    FOREIGN KEY (posts) REFERENCES community.posts (id)
+)
