@@ -1,4 +1,4 @@
-CREATE FUNCTION channels.join_user (client BIGINT, target_channel BIGINT, invitation TEXT)
+CREATE FUNCTION channels.join_user (target_client BIGINT, target_channel BIGINT, invitation TEXT)
 RETURNS BOOLEAN AS $$
 BEGIN
     IF EXISTS (
@@ -9,10 +9,10 @@ BEGIN
             uri = invitation
     ) THEN
         INSERT INTO channels.users (client, channel, joined, join_reason)
-        VALUES (client, target_channel, now(), format('INVATION %s', invitation));
+        VALUES (target_client, target_channel, now(), format('INVATION %s', invitation));
 
         INSERT INTO channels.messages (channel, posted, author, alias, type, data)
-        VALUES (target_channel, now(), 1, client, 'system', '@events/system/channels/users/join');
+        VALUES (target_channel, now(), target_client, 'SYSTEM', 'SYSTEM', '@events/system/channels/users/join');
 
         RETURN TRUE;
     ELSE
@@ -34,13 +34,13 @@ BEGIN
         UPDATE channels.users
         SET
             leaved = now(),
-            leave_reason = 'leave'
+            leave_reason = 'LEAVE'
         WHERE
             channel = target_channel AND
             leaved IS NULL;
 
         INSERT INTO channels.messages (channel, posted, author, alias, type, data)
-        VALUES (target_channel, now(), 1, client, 'system', '@events/system/channels/users/leave');
+        VALUES (target_channel, now(), client, 'SYSTEM', 'SYSTEM', '@events/system/channels/users/leave');
 
         RETURN TRUE;
     ELSE
@@ -49,15 +49,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE FUNCTION channels.post_message (author BIGINT, target_channel BIGINT, message TEXT)
-RETURNS BIGINT AS $$
-DECLARE
-    message_id BIGINT;
+CREATE FUNCTION channels.post_message_new (client BIGINT, target_channel BIGINT, message TEXT)
+RETURNS VOID AS $$
 BEGIN
-    INSERT INTO public.channels_messages (channel, posted, author, type, data)
-    VALUES (target_channel, now(), author, 'text message', message)
-    RETURNING id INTO message_id;
-
-    RETURN message_id;
+    INSERT INTO channels.messages (channel, posted, author, type, data)
+    VALUES (target_channel, now(), client, 'TEXT MESSAGE', message);
 END;
 $$ LANGUAGE plpgsql;

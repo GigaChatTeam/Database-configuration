@@ -14,8 +14,8 @@ BEGIN
 
     INSERT INTO channels.messages (channel, posted, author, alias, type, data)
     VALUES
-        (channel_id, now(), 1, 'system', 'system', '@events/system/channels/create'),
-        (channel_id, now(), owner, 'system', 'system', '@events/system/channels/create');
+        (channel_id, now(), 1, 'SYSTEM', 'SYSTEM', '@events/system/channels/create'),
+        (channel_id, now(), owner, 'SYSTEM', 'SYSTEM', '@events/system/channels/create');
 
     RETURN channel_id;
 END;
@@ -43,7 +43,7 @@ BEGIN
         VALUES (target_client, target_channel, now(), format('INVATION %s', invitation));
 
         INSERT INTO channels.messages (channel, posted, author, alias, type, data)
-        VALUES (target_channel, now(), 1, target_client, 'system', '@events/system/channels/users/join');
+        VALUES (target_channel, now(), target_client, 'SYSTEM', 'SYSTEM', '@events/system/channels/users/join');
 
         RETURN TRUE;
     ELSE

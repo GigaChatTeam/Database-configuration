@@ -9,7 +9,6 @@ CREATE TABLE channels.index (
 );
 
 CREATE TABLE channels.messages (
-    id BIGINT GENERATED ALWAYS AS IDENTITY,
     channel BIGINT NOT NULL,
     posted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     author BIGINT NOT NULL,
@@ -20,7 +19,7 @@ CREATE TABLE channels.messages (
     attachments_organize JSON,
     deleted TIMESTAMP,
     deleted_reason TEXT,
-    PRIMARY KEY (id, channel),
+    PRIMARY KEY (channel, posted),
     FOREIGN KEY (author) REFERENCES public.accounts (id),
     FOREIGN KEY (channel) REFERENCES channels.index (id)
 );
