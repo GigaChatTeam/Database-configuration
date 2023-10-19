@@ -1,5 +1,7 @@
 CREATE FUNCTION channels.join_user (target_client BIGINT, target_channel BIGINT, invitation TEXT)
 RETURNS BOOLEAN AS $$
+DECLARE
+    selected_time TIMESTAMP = now();
 BEGIN
     IF EXISTS (
         SELECT 1
@@ -9,10 +11,13 @@ BEGIN
             uri = invitation
     ) THEN
         INSERT INTO channels.users (client, channel, joined, join_reason)
-        VALUES (target_client, target_channel, now(), format('INVATION %s', invitation));
+        VALUES (target_client, target_channel, selected_time, format('INVATION %s', invitation));
 
-        INSERT INTO channels.messages (channel, posted, author, alias, type, data)
-        VALUES (target_channel, now(), target_client, 'SYSTEM', 'SYSTEM', '@events/system/channels/users/join');
+        INSERT INTO channels.messages (channel, posted, author, alias, type)
+        VALUES (target_channel, selected_time, target_client, 'SYSTEM', 'SYSTEM');
+
+        INSERT INTO channels.messages_data (channel, posted, data)
+        VALUES (target_channel, selected_time, '@events/system/channels/users/join');
 
         RETURN TRUE;
     ELSE
@@ -51,8 +56,13 @@ $$ LANGUAGE plpgsql;
 
 CREATE FUNCTION channels.post_message_new (client BIGINT, target_channel BIGINT, message TEXT)
 RETURNS VOID AS $$
+DECLARE
+    selected_time TIMESTAMP = now();
 BEGIN
-    INSERT INTO channels.messages (channel, posted, author, type, data)
-    VALUES (target_channel, now(), client, 'TEXT MESSAGE', message);
+    INSERT INTO channels.messages (channel, posted, author, type)
+    VALUES (target_channel, selected_time, client, 'TEXT MESSAGE');
+
+    INSERT INTO channels.messages_data (channel, posted, data)
+    VALUES (target_channel, selected_time, message);
 END;
 $$ LANGUAGE plpgsql;

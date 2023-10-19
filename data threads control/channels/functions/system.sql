@@ -1,21 +1,27 @@
-CREATE FUNCTION channels.create (owner BIGINT, title TEXT)
+CREATE OR REPLACE FUNCTION channels."create" (owner BIGINT, title TEXT)
 RETURNS BIGINT AS $$
 DECLARE
     channel_id BIGINT;
+    selected_time TIMESTAMP = now();
 BEGIN
     INSERT INTO channels."index" (owner, title, created)
-    VALUES (owner, title, now())
+    VALUES (owner, title, selected_time)
     RETURNING id INTO channel_id;
 
     INSERT INTO channels.users (client, channel, joined, join_reason)
     VALUES
-        (1, channel_id, now(), 'ADMIN CREATE CHANNEL'),
-        (owner, channel_id, now(), 'ADMIN CREATE CHANNEL');
+        (1, channel_id, selected_time, 'ADMIN CREATE CHANNEL'),
+        (owner, channel_id, selected_time + '5 ms'::INTERVAL, 'ADMIN CREATE CHANNEL');
 
-    INSERT INTO channels.messages (channel, posted, author, alias, type, data)
+    INSERT INTO channels.messages (channel, posted, author, alias, type)
     VALUES
-        (channel_id, now(), 1, 'SYSTEM', 'SYSTEM', '@events/system/channels/create'),
-        (channel_id, now(), owner, 'SYSTEM', 'SYSTEM', '@events/system/channels/create');
+        (channel_id, selected_time, 1, 'SYSTEM', 'SYSTEM'),
+        (channel_id, selected_time + '5 ms'::INTERVAL, owner, 'SYSTEM', 'SYSTEM');
+
+    INSERT INTO channels.messages_data (channel, posted, data)
+    VALUES
+        (channel_id, selected_time, '@events/system/channels/create'),
+        (channel_id, selected_time + '5 ms'::INTERVAL, '@events/system/channels/create');
 
     RETURN channel_id;
 END;

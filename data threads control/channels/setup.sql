@@ -14,15 +14,41 @@ CREATE TABLE channels.messages (
     author BIGINT NOT NULL,
     alias CHAR(32),
     type CHAR(12),
-    data TEXT,
-    attachments NUMERIC[3],
-    attachments_organize JSON,
     deleted TIMESTAMP,
     deleted_reason TEXT,
     PRIMARY KEY (channel, posted),
     FOREIGN KEY (author) REFERENCES public.accounts (id),
     FOREIGN KEY (channel) REFERENCES channels.index (id)
 );
+
+CREATE TABLE channels.messages_data (
+    channel BIGINT NOT NULL,
+    posted TIMESTAMP NOT NULL,
+    data TEXT,
+    attachments JSONB,
+    version SMALLINT NOT NULL,
+    PRIMARY KEY (channel, posted, version),
+    FOREIGN KEY (channel, posted) REFERENCES channels.messages (channel, posted)
+)
+
+CREATE OR REPLACE FUNCTION channels.select_message_version ()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.version = (
+        SELECT COALESCE(MAX(version), 0)
+        FROM channels.messages_data
+        WHERE
+            channel = NEW.channel AND
+            posted = NEW.posted
+    ) + 1;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tr_select_message_version
+BEFORE INSERT ON channels.messages_data
+FOR EACH ROW
+EXECUTE FUNCTION channels.select_message_version ();
 
 CREATE TABLE channels.users (
     client BIGINT NOT NULL,
