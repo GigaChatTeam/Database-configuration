@@ -13,7 +13,6 @@ CREATE TABLE public.tokens (
 CREATE TABLE public.ttokens (
     client BIGINT NOT NULL,
     token TEXT NOT NULL,
-    hashed BOOL NOT NULL DEFAULT FALSE,
     extradition TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     intentions TEXT[] NOT NULL,
     blocked TIMESTAMP,
