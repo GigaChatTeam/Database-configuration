@@ -61,7 +61,7 @@ CREATE TABLE channels.users (
     FOREIGN KEY (channel) REFERENCES channels.index (id)
 );
 
-CREATE TABLE channels.users_permissions (
+CREATE TABLE channels.permissions (
     client BIGINT NOT NULL,
     channel BIGINT NOT NULL,
     permission SMALLINT[4],
