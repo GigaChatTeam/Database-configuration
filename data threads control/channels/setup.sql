@@ -66,7 +66,7 @@ CREATE TABLE channels.users_permissions (
     channel BIGINT NOT NULL,
     permission SMALLINT[4],
     status BOOLEAN,
-    PRIMARY KEY (client, channel),
+    PRIMARY KEY (client, channel, permission),
     FOREIGN KEY (client) REFERENCES public.accounts (id),
     FOREIGN KEY (channel) REFERENCES channels.index (id),
     FOREIGN KEY (permission) REFERENCES public.permissions (id)
