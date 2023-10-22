@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION channels."create" (owner BIGINT, title TEXT)
+CREATE FUNCTION channels."create" (owner BIGINT, title TEXT)
 RETURNS BIGINT AS $$
 DECLARE
     channel_id BIGINT;
@@ -11,17 +11,17 @@ BEGIN
     INSERT INTO channels.users (client, channel, joined, join_reason)
     VALUES
         (1, channel_id, selected_time, 'ADMIN CREATE CHANNEL'),
-        (owner, channel_id, selected_time + '5 ms'::INTERVAL, 'ADMIN CREATE CHANNEL');
+        (owner, channel_id, selected_time, 'ADMIN CREATE CHANNEL');
 
     INSERT INTO channels.messages (channel, posted, author, alias, type)
     VALUES
         (channel_id, selected_time, 1, 'SYSTEM', 'SYSTEM'),
         (channel_id, selected_time + '5 ms'::INTERVAL, owner, 'SYSTEM', 'SYSTEM');
 
-    INSERT INTO channels.messages_data (channel, posted, data)
+    INSERT INTO channels.messages_data (channel, original, edited, data, version)
     VALUES
-        (channel_id, selected_time, '@events/system/channels/create'),
-        (channel_id, selected_time + '5 ms'::INTERVAL, '@events/system/channels/create');
+        (channel_id, selected_time, selected_time, '@events/system/channels/create', 1),
+        (channel_id, selected_time + '5 ms'::INTERVAL, selected_time + '5 ms'::INTERVAL, '@events/system/channels/create', 1);
 
     RETURN channel_id;
 END;

@@ -23,15 +23,16 @@ CREATE TABLE channels.messages (
 
 CREATE TABLE channels.messages_data (
     channel BIGINT NOT NULL,
-    posted TIMESTAMP NOT NULL,
+    original TIMESTAMP NOT NULL,
+    edited TIMESTAMP NOT NULL,
     data TEXT,
     attachments JSONB,
     version SMALLINT NOT NULL,
-    PRIMARY KEY (channel, posted, version),
-    FOREIGN KEY (channel, posted) REFERENCES channels.messages (channel, posted)
+    PRIMARY KEY (channel, original, version),
+    FOREIGN KEY (channel, original) REFERENCES channels.messages (channel, posted)
 )
 
-CREATE OR REPLACE FUNCTION channels.select_message_version ()
+CREATE FUNCTION channels.select_message_version ()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.version = (

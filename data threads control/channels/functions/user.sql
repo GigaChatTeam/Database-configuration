@@ -16,8 +16,8 @@ BEGIN
         INSERT INTO channels.messages (channel, posted, author, alias, type)
         VALUES (target_channel, selected_time, target_client, 'SYSTEM', 'SYSTEM');
 
-        INSERT INTO channels.messages_data (channel, posted, data)
-        VALUES (target_channel, selected_time, '@events/system/channels/users/join');
+        INSERT INTO channels.messages_data (channel, original, edited, data)
+        VALUES (target_channel, selected_time, selected_time, '@events/system/channels/users/join');
 
         RETURN TRUE;
     ELSE
@@ -55,14 +55,16 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE FUNCTION channels.post_message_new (client BIGINT, target_channel BIGINT, message TEXT)
-RETURNS VOID AS $$
+RETURNS TIMESTAMP AS $$
 DECLARE
     selected_time TIMESTAMP = now();
 BEGIN
     INSERT INTO channels.messages (channel, posted, author, type)
     VALUES (target_channel, selected_time, client, 'TEXT MESSAGE');
 
-    INSERT INTO channels.messages_data (channel, posted, data)
-    VALUES (target_channel, selected_time, message);
+    INSERT INTO channels.messages_data (channel, original, edited, data, version)
+    VALUES (target_channel, selected_time,  selected_time, message, 1);
+
+    RETURN selected_time;
 END;
 $$ LANGUAGE plpgsql;
