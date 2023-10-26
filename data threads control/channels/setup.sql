@@ -40,7 +40,7 @@ BEGIN
         FROM channels.messages_data
         WHERE
             channel = NEW.channel AND
-            posted = NEW.posted
+            edited = NEW.edited
     ) + 1;
     RETURN NEW;
 END;
