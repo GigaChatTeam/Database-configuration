@@ -1,8 +1,8 @@
 CREATE TABLE channels.index (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     owner BIGINT NOT NULL,
-    title TEXT NOT NULL CHECK (length(title) > 3),
-    description TEXT,
+    title TEXT NOT NULL CHECK (length(title) > 2 AND length(title) < 33),
+    description TEXT CHECK (length(description) < 257),
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (owner) REFERENCES public.accounts (id)

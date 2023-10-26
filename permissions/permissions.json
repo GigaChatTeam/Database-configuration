@@ -46,7 +46,9 @@
         "2": "@permissions/channels/invitations/delete"
       },
       "9": {
-        "0": "@permissions/channels/delete"
+        "0": "@permissions/channels/delete",
+        "2": "@permissions/channels/settings/external/change/title",
+        "3": "@permissions/channels/settings/external/change/description"
       }
     }
   },
