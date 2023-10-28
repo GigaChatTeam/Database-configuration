@@ -9,24 +9,19 @@ BEGIN
             intentions = sourse_intentions AND
             token = sourse_token AND
             blocked IS NULL
+        ORDER BY
+            extradition ASC
     ) THEN
         UPDATE public.ttokens
         SET
             blocked = now(),
             reason = 'TOKEN WAS USED'
         WHERE
-            CTID IN (
-                SELECT CTID
-                FROM public.ttokens
-                WHERE
-                    client = 5 AND
-                    intentions = ARRAY ['LOAD', 'HISTORY'] AND
-                    token = 'token324' AND
-                    blocked IS NULL
-                ORDER BY
-                    blocked ASC
-                LIMIT 1
-            )
+            client = sourse_client AND
+            intentions = sourse_intentions AND
+            token = sourse_token AND
+            blocked IS NULL;
+
         RETURN TRUE;
     ELSE
         RETURN FALSE;
