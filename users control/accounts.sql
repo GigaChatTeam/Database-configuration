@@ -27,7 +27,7 @@ CREATE TABLE public.accounts_changes (
 
 -- This table stores information about bots
 CREATE TABLE public.bots (
-    client BIGINT PRIMARY KEY,
+    client BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     owner BIGINT NOT NULL,
     FOREIGN KEY (client) REFERENCES public.accounts (id),
     FOREIGN KEY (owner) REFERENCES public.accounts (id)
