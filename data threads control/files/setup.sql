@@ -18,6 +18,7 @@ CREATE TABLE attachments.files (
     size BIGINT,
     format TEXT,
     filename TEXT NOT NULL,
+    path TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'EXPECTED',
     FOREIGN KEY (owner) REFERENCES public."accounts" (id),
     FOREIGN KEY (bot) REFERENCES public.bots (client),
