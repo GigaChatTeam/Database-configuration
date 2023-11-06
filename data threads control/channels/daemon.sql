@@ -1,0 +1,7 @@
+CREATE TABLE channels.messages_y2023m11 PARTITION OF channels.messages
+    FOR VALUES FROM ('01-11-2023'::TIMESTAMP) TO ('01-12-2023'::TIMESTAMP);
+
+CREATE TABLE channels.messages_data_y2023m11 PARTITION OF channels.messages_data
+    FOR VALUES FROM ('01-11-2023'::TIMESTAMP) TO ('01-12-2023'::TIMESTAMP);
+
+SELECT TRUE

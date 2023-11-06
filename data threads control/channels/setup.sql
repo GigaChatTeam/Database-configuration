@@ -19,7 +19,7 @@ CREATE TABLE channels.messages (
     PRIMARY KEY (channel, posted),
     FOREIGN KEY (author) REFERENCES public.accounts (id),
     FOREIGN KEY (channel) REFERENCES channels.index (id)
-);
+) PARTITION BY RANGE (posted);
 
 CREATE TABLE channels.messages_data (
     channel BIGINT NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE channels.messages_data (
     version SMALLINT NOT NULL,
     PRIMARY KEY (channel, original, version),
     FOREIGN KEY (channel, original) REFERENCES channels.messages (channel, posted)
-)
+) PARTITION BY RANGE (original);
 
 CREATE FUNCTION channels.select_message_version ()
 RETURNS TRIGGER AS $$
