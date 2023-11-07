@@ -81,7 +81,7 @@ CREATE TABLE channels.invitations (
     expiration TIMESTAMP,
     permitted_uses INTEGER,
     total_uses INTEGER NOT NULL DEFAULT 0,
-    enabled BOOLEAN NULL DEFAULT TRUE,
+    enabled BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY (uri),
     FOREIGN KEY (creator) REFERENCES public.accounts (id),
     FOREIGN KEY (channel) REFERENCES channels.index (id),
