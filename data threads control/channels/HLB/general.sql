@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION channels.select_channels (source_client BIGINT, ttoken TEXT)
+CREATE FUNCTION channels.select_channels (source_client BIGINT, ttoken TEXT)
 RETURNS SETOF RECORD AS $$
 BEGIN
     IF public.validate_ttoken(source_client, ttoken, ARRAY ['LOAD', 'CHANNELS'])
