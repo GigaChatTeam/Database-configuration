@@ -15,8 +15,7 @@
         "3": "@permissions/channels/messages/your/delete",
         "4": "@permissions/channels/messages/forward/in",
         "41": "@permissions/channels/messages/forward/your/out",
-        "42": "@permissions/channels/messages/forward/their/out",
-        "5": "@permissions/channels/messages/read"
+        "42": "@permissions/channels/messages/forward/their/out"
       },
       "2": {
         "1": "@permissions/channels/messages/text",
