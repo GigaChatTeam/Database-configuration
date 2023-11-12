@@ -32,7 +32,7 @@ with open("daemon.sql") as file:
 
 commands = script.format(**get_time_pattern())
 
-for command in commands.split(";"):
+for command in commands.split(";")[:-1]:
     try:
         with connection.cursor() as cursor:
             cursor.execute(command)

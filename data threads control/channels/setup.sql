@@ -3,9 +3,12 @@ CREATE TABLE channels.index (
     owner BIGINT NOT NULL,
     title TEXT NOT NULL CHECK (length(title) > 2 AND length(title) < 33),
     description TEXT CHECK (length(description) < 257),
+    avatar BIGINT,
+    links TEXT[],
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (owner) REFERENCES public.accounts (id)
+    FOREIGN KEY (owner) REFERENCES public.accounts (id),
+    FOREIGN KEY (avatar) REFERENCES attachments.files (id)
 );
 
 CREATE TABLE channels.messages (
@@ -36,7 +39,7 @@ CREATE FUNCTION channels.select_message_version ()
 RETURNS TRIGGER AS $$
 BEGIN
     NEW.version = (
-        SELECT COALESCE(MAX(version), 0)
+        SELECT COALESCE (MAX(version), 0)
         FROM channels.messages_data
         WHERE
             channel = NEW.channel AND
