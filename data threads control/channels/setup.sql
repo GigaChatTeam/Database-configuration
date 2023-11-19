@@ -7,7 +7,7 @@ CREATE TABLE channels.index (
     links TEXT[],
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (owner) REFERENCES public.accounts (id),
+    FOREIGN KEY (owner) REFERENCES users.accounts (id),
     FOREIGN KEY (avatar) REFERENCES attachments.files (id)
 );
 
@@ -15,12 +15,13 @@ CREATE TABLE channels.messages (
     channel BIGINT NOT NULL,
     posted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     author BIGINT NOT NULL,
-    alias CHAR(32),
-    type CHAR(12),
+    alias UUID,
+    type VARCHAR(12),
     deleted TIMESTAMP,
     deleted_reason TEXT,
     PRIMARY KEY (channel, posted),
-    FOREIGN KEY (author) REFERENCES public.accounts (id),
+    FOREIGN KEY (author) REFERENCES users.accounts (id),
+    FOREIGN KEY (alias) REFERENCES users.aliases (id),
     FOREIGN KEY (channel) REFERENCES channels.index (id)
 ) PARTITION BY RANGE (posted);
 
@@ -35,25 +36,6 @@ CREATE TABLE channels.messages_data (
     FOREIGN KEY (channel, original) REFERENCES channels.messages (channel, posted)
 ) PARTITION BY RANGE (original);
 
-CREATE FUNCTION channels.select_message_version ()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.version = (
-        SELECT COALESCE (MAX(version), 0)
-        FROM channels.messages_data
-        WHERE
-            channel = NEW.channel AND
-            edited = NEW.edited
-    ) + 1;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER tr_select_message_version
-BEFORE INSERT ON channels.messages_data
-FOR EACH ROW
-EXECUTE FUNCTION channels.select_message_version ();
-
 CREATE TABLE channels.users (
     client BIGINT NOT NULL,
     channel BIGINT NOT NULL,
@@ -61,7 +43,7 @@ CREATE TABLE channels.users (
     join_reason TEXT,
     leaved TIMESTAMP,
     leave_reason TEXT,
-    FOREIGN KEY (client) REFERENCES public.accounts (id),
+    FOREIGN KEY (client) REFERENCES users.accounts (id),
     FOREIGN KEY (channel) REFERENCES channels.index (id)
 );
 
@@ -71,7 +53,7 @@ CREATE TABLE channels.permissions (
     permission SMALLINT[4],
     status BOOLEAN,
     PRIMARY KEY (client, channel, permission),
-    FOREIGN KEY (client) REFERENCES public.accounts (id),
+    FOREIGN KEY (client) REFERENCES users.accounts (id),
     FOREIGN KEY (channel) REFERENCES channels.index (id),
     FOREIGN KEY (permission) REFERENCES public.permissions (id)
 );
@@ -86,7 +68,7 @@ CREATE TABLE channels.invitations (
     total_uses INTEGER NOT NULL DEFAULT 0,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY (uri),
-    FOREIGN KEY (creator) REFERENCES public.accounts (id),
+    FOREIGN KEY (creator) REFERENCES users.accounts (id),
     FOREIGN KEY (channel) REFERENCES channels.index (id),
     CHECK (COALESCE(permitted_uses, 'Infinity'::NUMERIC) > total_uses),
     CHECK (COALESCE(expiration, now()) > created)
