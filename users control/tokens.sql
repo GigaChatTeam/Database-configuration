@@ -1,20 +1,21 @@
 CREATE TABLE users.tokens (
     client BIGINT NOT NULL,
     agent TEXT NOT NULL,
-    token TEXT NOT NULL,
-    logins JSONB[],
-    start TIMESTAMP NOT NULL,
-    ending TIMESTAMP,
+    secret TEXT NOT NULL,
+    key TEXT NOT NULL,
+    start TIMESTAMP NOT NULL DEFAULT now(),
+    PRIMARY KEY (client, key),
     FOREIGN KEY (client) REFERENCES users.accounts (id)
 );
 
-CREATE TABLE users.ttokens (
+CREATE TABLE users.logins (
     client BIGINT NOT NULL,
-    token TEXT NOT NULL,
-    extradition TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    intentions TEXT[] NOT NULL,
-    blocked TIMESTAMP,
-    reason TEXT,
-    comments TEXT[],
-    FOREIGN KEY (client) REFERENCES users.accounts (id)
+    key TEXT NOT NULL,
+    login TIMESTAMP NOT NULL,
+    duration INTERVAL,
+    agent TEXT,
+    PRIMARY KEY (client, key),
+    FOREIGN KEY (client, key)
+        REFERENCES users.tokens (client, key)
+        ON DELETE SET NULL
 );
