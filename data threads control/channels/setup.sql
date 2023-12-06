@@ -30,7 +30,7 @@ CREATE TABLE channels.messages_data (
     original TIMESTAMP NOT NULL,
     edited TIMESTAMP NOT NULL,
     data TEXT,
-    version SMALLINT NOT NULL,
+    version SMALLINT NOT NULL DEFAULT 1,
     PRIMARY KEY (channel, original, version),
     FOREIGN KEY (channel, original) REFERENCES channels.messages (channel, posted)
 ) PARTITION BY RANGE (original);
@@ -47,7 +47,7 @@ CREATE TABLE channels.messages_attachments_media (
     FOREIGN KEY (channel, original, version) REFERENCES channels.messages_data (channel, original, version)
 );
 
-CREATE TABLE channels.messages_attachments_audio (
+CREATE TABLE channels.messages_attachments_files (
     file BIGINT NOT NULL,
     channel BIGINT NOT NULL,
     original TIMESTAMP NOT NULL,
