@@ -14,8 +14,7 @@ CREATE TABLE users.logins (
     login TIMESTAMP NOT NULL,
     duration INTERVAL,
     agent TEXT,
+    successfully BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY (client, key),
-    FOREIGN KEY (client, key)
-        REFERENCES users.tokens (client, key)
-        ON DELETE SET NULL
+    FOREIGN KEY (client) REFERENCES users.accounts (id)
 );
