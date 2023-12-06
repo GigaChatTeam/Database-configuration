@@ -15,6 +15,5 @@ CREATE TABLE users.logins (
     duration INTERVAL,
     agent TEXT,
     successfully BOOLEAN NOT NULL DEFAULT TRUE,
-    PRIMARY KEY (client, key),
     FOREIGN KEY (client) REFERENCES users.accounts (id)
 );
