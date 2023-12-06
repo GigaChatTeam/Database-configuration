@@ -94,7 +94,3 @@ BEGIN
     RETURN selected_time;
 END;
 $$ LANGUAGE plpgsql;
-
-    RETURN selected_time;
-END;
-$$ LANGUAGE plpgsql;
