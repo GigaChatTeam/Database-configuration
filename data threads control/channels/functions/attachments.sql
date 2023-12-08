@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION channels.select_message_media_attachments (source_channel BIGINT, source_message TIMESTAMP, source_version SMALLINT)
+CREATE FUNCTION channels.select_message_media_attachments (source_channel BIGINT, source_message TIMESTAMP, source_version SMALLINT)
 RETURNS BIGINT[][] AS $$
 DECLARE
     size_x SMALLINT;
@@ -27,7 +27,7 @@ BEGIN
 
     IF (size_x IS NULL) OR (size_y IS NULL)
     THEN
-        RETURN NULL;
+        RETURN ARRAY [ ARRAY[]::BIGINT[] ];
     ELSE
         result := ARRAY(
             SELECT ARRAY(
@@ -62,5 +62,21 @@ BEGIN
 
         RETURN result;
     END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE FUNCTION channels.select_message_files_attachments (source_channel BIGINT, source_message TIMESTAMP, source_version SMALLINT)
+RETURNS BIGINT[] AS $$
+BEGIN
+    RETURN ARRAY (
+        SELECT file
+        FROM channels.messages_attachments_files
+        WHERE
+            channel = source_channel AND
+            original = source_message AND
+            version = source_version
+        ORDER BY
+            position ASC
+    );
 END;
 $$ LANGUAGE plpgsql;
