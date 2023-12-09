@@ -4,7 +4,6 @@ CREATE TABLE channels.index (
     title TEXT NOT NULL CHECK (length(title) > 2 AND length(title) < 33),
     description TEXT CHECK (length(description) < 257),
     avatar BIGINT,
-    links TEXT[],
     created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (owner) REFERENCES users.accounts (id),
