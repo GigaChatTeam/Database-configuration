@@ -4,8 +4,9 @@ CREATE TABLE channels.index (
     title TEXT NOT NULL CHECK (length(title) > 2 AND length(title) < 33),
     description TEXT CHECK (length(description) < 257),
     avatar BIGINT,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    "public" BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (owner) REFERENCES users.accounts (id),
     FOREIGN KEY (avatar) REFERENCES attachments.files (id)
 );
