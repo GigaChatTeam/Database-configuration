@@ -48,14 +48,14 @@ BEGIN
             channels.select_message_media_attachments (
                 "index".channel,
                 "index".posted,
-                1::SMALLINT
+                MAX(data.version)::SMALLINT
             ),
             data.data,
             MAX(data.version) <> 1,
             channels.select_message_files_attachments (
                 "index".channel,
                 "index".posted,
-                1::SMALLINT
+                MAX(data.version)::SMALLINT
             )
         FROM
             channels.messages "index"
