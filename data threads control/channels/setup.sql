@@ -6,6 +6,7 @@ CREATE TABLE channels.index (
     avatar BIGINT,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
+    "public" BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (owner) REFERENCES users.accounts (id),
     FOREIGN KEY (avatar) REFERENCES attachments.files (id)
 );
