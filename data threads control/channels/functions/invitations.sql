@@ -1,50 +1,28 @@
-CREATE FUNCTION channels.create_invitation (client BIGINT, target_channel BIGINT)
+CREATE FUNCTION channels.create_invitation (target_client BIGINT, target_channel BIGINT)
 RETURNS TEXT AS $$
-DECLARE
-    result_uri CHAR(16);
-BEGIN
-    IF EXISTS (
-        SELECT 1
-        FROM channels.users
-        WHERE
-            channel = target_channel AND
-            leaved IS NULL
-    ) THEN
-        INSERT INTO channels.invitations (creator, channel, created)
-        VALUES (client, target_channel, now())
-        RETURNING uri INTO result_uri;
-
-        RETURN result_uri;
-    ELSE
-        RETURN NULL;
-    END IF;
-END;
-$$ LANGUAGE plpgsql;
+    INSERT INTO channels.invitations (creator, channel, created)
+    VALUES (target_client, target_channel, now())
+    RETURNING uri
+$$ LANGUAGE sql;
 
 CREATE FUNCTION channels.delete_invitation (invation_uri TEXT)
-RETURNS BOOLEAN AS $$
-BEGIN
+RETURNS VOID AS $$
     DELETE FROM channels.invitations
     WHERE
-        uri = invation_uri;
-END;
-$$ LANGUAGE plpgsql;
+        uri = invation_uri
+$$ LANGUAGE sql;
 
 CREATE FUNCTION channels.delete_invitation (target_channel BIGINT)
-RETURNS BOOLEAN AS $$
-BEGIN
+RETURNS VOID AS $$
     DELETE FROM channels.invitations
     WHERE
-        channel = target_channel;
-END;
-$$ LANGUAGE plpgsql;
+        channel = target_channel
+$$ LANGUAGE sql;
 
-CREATE FUNCTION channels.delete_invitation (client BIGINT, target_channel BIGINT)
-RETURNS BOOLEAN AS $$
-BEGIN
+CREATE FUNCTION channels.delete_invitation (target_client BIGINT, target_channel BIGINT)
+RETURNS VOID AS $$
     DELETE FROM channels.invitations
     WHERE
-        creator = client AND
-        channel = target_channel;
-END;
-$$ LANGUAGE plpgsql;
+        creator = target_client AND
+        channel = target_channel
+$$ LANGUAGE sql;

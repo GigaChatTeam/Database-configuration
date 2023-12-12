@@ -4,7 +4,7 @@ CREATE TABLE channels.index (
     title TEXT NOT NULL CHECK (length(title) > 2 AND length(title) < 33),
     description TEXT CHECK (length(description) < 257),
     avatar BIGINT,
-    created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (owner) REFERENCES users.accounts (id),
     FOREIGN KEY (avatar) REFERENCES attachments.files (id)
@@ -12,11 +12,11 @@ CREATE TABLE channels.index (
 
 CREATE TABLE channels.messages (
     channel BIGINT NOT NULL,
-    posted TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    posted TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     author BIGINT NOT NULL,
     alias UUID,
     type VARCHAR(12),
-    deleted TIMESTAMP,
+    deleted TIMESTAMP WITHOUT TIME ZONE,
     deleted_reason TEXT,
     PRIMARY KEY (channel, posted),
     FOREIGN KEY (author) REFERENCES users.accounts (id),
@@ -26,8 +26,8 @@ CREATE TABLE channels.messages (
 
 CREATE TABLE channels.messages_data (
     channel BIGINT NOT NULL,
-    original TIMESTAMP NOT NULL,
-    edited TIMESTAMP NOT NULL,
+    original TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+    edited TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     data TEXT,
     version SMALLINT NOT NULL DEFAULT 1,
     PRIMARY KEY (channel, original, version),
@@ -37,7 +37,7 @@ CREATE TABLE channels.messages_data (
 CREATE TABLE channels.messages_attachments_media (
     file BIGINT NOT NULL,
     channel BIGINT NOT NULL,
-    original TIMESTAMP NOT NULL,
+    original TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     x SMALLINT[2] NOT NULL,
     y SMALLINT[2] NOT NULL,
     version SMALLINT NOT NULL DEFAULT 1,
@@ -49,7 +49,7 @@ CREATE TABLE channels.messages_attachments_media (
 CREATE TABLE channels.messages_attachments_files (
     file BIGINT NOT NULL,
     channel BIGINT NOT NULL,
-    original TIMESTAMP NOT NULL,
+    original TIMESTAMP WITHOUT TIME ZONEP NOT NULL,
     position SMALLINT NOT NULL,
     version SMALLINT NOT NULL DEFAULT 1,
     PRIMARY KEY (file, channel, original, version),
@@ -60,9 +60,9 @@ CREATE TABLE channels.messages_attachments_files (
 CREATE TABLE channels.users (
     client BIGINT NOT NULL,
     channel BIGINT NOT NULL,
-    joined TIMESTAMP NOT NULL,
+    joined TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     join_reason TEXT,
-    leaved TIMESTAMP,
+    leaved TIMESTAMP WITHOUT TIME ZONE,
     leave_reason TEXT,
     FOREIGN KEY (client) REFERENCES users.accounts (id),
     FOREIGN KEY (channel) REFERENCES channels.index (id)
@@ -71,7 +71,7 @@ CREATE TABLE channels.users (
 CREATE TABLE channels.groups (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     channel BIGINT NOT NULL,
-    created TIMESTAMP NOT NULL,
+    created TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     created_by BIGINT NOT NULL,
     title TEXT NOT NULL,
     primacy SMALLINT NOT NULL,
@@ -112,8 +112,8 @@ CREATE TABLE channels.invitations (
     creator BIGINT NOT NULL,
     channel BIGINT NOT NULL,
     uri TEXT DEFAULT substring(md5(public.uuid_generate_v4()::text), 0, 17) PRIMARY KEY,
-    created TIMESTAMP NOT NULL DEFAULT now(),
-    expiration TIMESTAMP,
+    created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT TIMEZONE('UTC', now()),
+    expiration TIMESTAMP WITHOUT TIME ZONE,
     permitted_uses INTEGER,
     total_uses INTEGER NOT NULL DEFAULT 0,
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
