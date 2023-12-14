@@ -5,7 +5,7 @@ CREATE TABLE users.tokens (
     key TEXT NOT NULL,
     start TIMESTAMP NOT NULL DEFAULT now(),
     PRIMARY KEY (client, key),
-    FOREIGN KEY (client) REFERENCES users.accounts (id)
+    FOREIGN KEY (client) REFERENCES users.accounts ("id")
 );
 
 CREATE TABLE users.logins (
@@ -15,5 +15,5 @@ CREATE TABLE users.logins (
     duration INTERVAL,
     agent TEXT,
     successfully BOOLEAN NOT NULL DEFAULT TRUE,
-    FOREIGN KEY (client) REFERENCES users.accounts (id)
+    FOREIGN KEY (client) REFERENCES users.accounts ("id")
 );

@@ -7,7 +7,7 @@ BEGIN
     VALUES ("owner", title, TIMEZONE('UTC', now()))
     RETURNING "id" INTO channel_id;
 
-    INSERT INTO channels.users (client, channel, joined, join_reason)
+    INSERT INTO channels.users (client, channel, joined, reason)
     VALUES
         (0, channel_id, TIMEZONE('UTC', now()), 'CREATE CHANNEL'),
         ("owner", channel_id, TIMEZONE('UTC', now()) + '5 ms'::INTERVAL, 'CREATE CHANNEL');

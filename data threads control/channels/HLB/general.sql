@@ -44,7 +44,7 @@ BEGIN
             EXTRACT ( EPOCH FROM "index".posted ) AS "posted",
             "index".author,
             "index".alias,
-            "index".type,
+            "index"."type",
             channels.select_message_media_attachments (
                 "index".channel,
                 "index".posted,
@@ -80,7 +80,7 @@ BEGIN
             "index"."posted",
             "index".author,
             "index".alias,
-            "index".type,
+            "index"."type",
             data.data
         ORDER BY
             "index".posted ASC
@@ -99,7 +99,7 @@ BEGIN
             EXTRACT ( EPOCH FROM "index".posted ) AS "posted",
             "index".author,
             "index".alias,
-            "index".type,
+            "index"."type",
             channels.select_message_media_attachments (
                 "index".channel,
                 "index".posted,
@@ -135,7 +135,7 @@ BEGIN
             "index"."posted",
             "index".author,
             "index".alias,
-            "index".type,
+            "index"."type",
             data.data
         ORDER BY
             "index".posted DESC

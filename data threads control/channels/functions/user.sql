@@ -14,7 +14,7 @@ BEGIN
         WHERE
             uri = invitation;
 
-        INSERT INTO channels.users (client, channel, joined, join_reason)
+        INSERT INTO channels.users (client, channel, joined, reason)
         VALUES (target_client, target_channel, TIMEZONE('UTC', now()), format('INVATION %s', invitation));
 
         INSERT INTO channels.messages (channel, posted, author, alias, "type")

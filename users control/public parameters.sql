@@ -5,12 +5,12 @@ CREATE TABLE users.profiles (
     fast_avatar BYTEA,
     avatars BIGINT[],
     description TEXT,
-    FOREIGN KEY (client) REFERENCES users.accounts (id),
+    FOREIGN KEY (client) REFERENCES users.accounts ("id"),
     FOREIGN KEY (username) REFERENCES users.accounts (username)
 );
 
 CREATE TABLE users.settings (
     client BIGINT NOT NULL,
-    privacy JSONB, -- TODO
-    FOREIGN KEY (client) REFERENCES users.accounts (id)
+    privacy JSONB,
+    FOREIGN KEY (client) REFERENCES users.accounts ("id")
 );
