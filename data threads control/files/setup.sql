@@ -1,4 +1,4 @@
-CREATE TABLE attachments.files (
+CREATE TABLE files."index" (
     "id" BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     "owner" BIGINT NOT NULL,
     bot BIGINT,
@@ -7,18 +7,6 @@ CREATE TABLE attachments.files (
     bucket TEXT NOT NULL,
     filename TEXT NOT NULL,
     path TEXT NOT NULL,
-    status TEXT NOT NULL DEFAULT 'EXPECTED',
-    FOREIGN KEY ("owner") REFERENCES users.accounts ("id"),
-    FOREIGN KEY (bot) REFERENCES users.bots (client)
-);
-
-CREATE TABLE attachments.widgets (
-    "id" BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    "owner" BIGINT NOT NULL,
-    bot BIGINT,
-    created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT TIMEZONE('UTC', now()),
-    intentions TEXT[],
-    "data" TEXT[] NOT NULL,
     status TEXT NOT NULL DEFAULT 'EXPECTED',
     FOREIGN KEY ("owner") REFERENCES users.accounts ("id"),
     FOREIGN KEY (bot) REFERENCES users.bots (client)

@@ -1,4 +1,6 @@
 CREATE SCHEMA channels;
 CREATE SCHEMA servers;
-CREATE SCHEMA attachments;
+CREATE SCHEMA files;
 CREATE SCHEMA users;
+
+DROP SCHEMA files;

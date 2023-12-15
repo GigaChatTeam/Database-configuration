@@ -8,7 +8,7 @@ CREATE TABLE channels."index" (
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     "public" BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY ("owner") REFERENCES users.accounts ("id"),
-    FOREIGN KEY (avatar) REFERENCES attachments.files ("id")
+    FOREIGN KEY (avatar) REFERENCES files."index" ("id")
 );
 
 CREATE TABLE channels.messages (
@@ -43,7 +43,7 @@ CREATE TABLE channels.messages_attachments_media (
     y SMALLINT[2] NOT NULL,
     version SMALLINT NOT NULL DEFAULT 1,
     PRIMARY KEY (file, channel, original, version),
-    FOREIGN KEY (file) REFERENCES attachments.files ("id"),
+    FOREIGN KEY (file) REFERENCES files."index" ("id"),
     FOREIGN KEY (channel, original, version) REFERENCES channels.messages_data (channel, original, version)
 ) PARTITION BY RANGE (original);
 
@@ -55,7 +55,7 @@ CREATE TABLE channels.messages_attachments_files (
     version SMALLINT NOT NULL DEFAULT 1,
     PRIMARY KEY (file, channel, original, version),
     UNIQUE (channel, original, position, version),
-    FOREIGN KEY (file) REFERENCES attachments.files ("id"),
+    FOREIGN KEY (file) REFERENCES files."index" ("id"),
     FOREIGN KEY (channel, original, version) REFERENCES channels.messages_data (channel, original, version)
 ) PARTITION BY RANGE (original);
 
