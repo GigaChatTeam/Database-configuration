@@ -107,7 +107,7 @@ CREATE TABLE channels.permissions_groups (
 CREATE TABLE channels.invitations (
     creator BIGINT NOT NULL,
     channel BIGINT NOT NULL,
-    uri TEXT DEFAULT substring(md5(public.uuid_generate_v4()::text), 0, invitation_length + 1) PRIMARY KEY,
+    uri TEXT DEFAULT substring(md5(public.uuid_generate_v4()::text), 0, 9) PRIMARY KEY,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT TIMEZONE('UTC', now()),
     expiration TIMESTAMP WITHOUT TIME ZONE,
     permitted_uses INTEGER,
