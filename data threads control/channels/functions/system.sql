@@ -34,7 +34,6 @@ RETURNS BOOLEAN AS $$
         FROM channels.users
         WHERE
             client = target_client AND
-            channel = target_channel AND
-            leaved IS NULL
+            channel = target_channel
     )
 $$ LANGUAGE sql;
