@@ -87,21 +87,23 @@ CREATE TABLE channels.users2groups (
 CREATE TABLE channels.permissions_users (
     client BIGINT NOT NULL,
     channel BIGINT NOT NULL,
-    permission INTEGER NOT NULL,
+    permission SMALLINT NOT NULL,
     status BOOLEAN,
     PRIMARY KEY (client, channel, permission),
     FOREIGN KEY (client) REFERENCES users.accounts ("id"),
-    FOREIGN KEY (channel) REFERENCES channels.index ("id")
+    FOREIGN KEY (channel) REFERENCES channels.index ("id"),
+    FOREIGN KEY (permission) REFERENCES public.permissions ("id")
 );
 
 CREATE TABLE channels.permissions_groups (
     "group" BIGINT NOT NULL,
     channel BIGINT NOT NULL,
-    permission INTEGER NOT NULL,
+    permission SMALLINT NOT NULL,
     status BOOLEAN,
     PRIMARY KEY ("group", channel, permission),
     FOREIGN KEY ("group") REFERENCES channels."groups" ("id") ON DELETE CASCADE,
-    FOREIGN KEY (channel) REFERENCES channels.index ("id")
+    FOREIGN KEY (channel) REFERENCES channels.index ("id"),
+    FOREIGN KEY (permission) REFERENCES public.permissions ("id")
 );
 
 CREATE TABLE channels.invitations (
