@@ -34,7 +34,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE FUNCTION channels.leave_user (target_client BIGINT, target_channel BIGINT)
-RETURNS BOOLEAN AS $$
+RETURNS TIMESTAMP AS $$
 BEGIN
     IF EXISTS (
         SELECT *
@@ -54,10 +54,9 @@ BEGIN
         INSERT INTO channels.messages_data (channel, original, edited, "data")
         VALUES (target_channel, TIMEZONE('UTC', now()), TIMEZONE('UTC', now()), '@events/system/channels/users/leave');
 
-        RETURN TRUE;
+        RETURN TIMEZONE('UTC', now());
     ELSE
-        RETURN FALSE;
+        RETURN NULL;
     END IF;
 END;
 $$ LANGUAGE plpgsql;
-
