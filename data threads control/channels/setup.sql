@@ -92,7 +92,7 @@ CREATE TABLE channels.permissions_users (
     PRIMARY KEY (client, channel, permission),
     FOREIGN KEY (client) REFERENCES users.accounts ("id"),
     FOREIGN KEY (channel) REFERENCES channels.index ("id"),
-    FOREIGN KEY (permission) REFERENCES public.permissions ("id")
+    FOREIGN KEY (permission) REFERENCES channels.permissions ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE channels.permissions_groups (
@@ -103,7 +103,7 @@ CREATE TABLE channels.permissions_groups (
     PRIMARY KEY ("group", channel, permission),
     FOREIGN KEY ("group") REFERENCES channels."groups" ("id") ON DELETE CASCADE,
     FOREIGN KEY (channel) REFERENCES channels.index ("id"),
-    FOREIGN KEY (permission) REFERENCES public.permissions ("id")
+    FOREIGN KEY (permission) REFERENCES channels.permissions ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE channels.invitations (
