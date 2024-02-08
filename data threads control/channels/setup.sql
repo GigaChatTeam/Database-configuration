@@ -64,6 +64,7 @@ CREATE TABLE channels."users" (
     channel BIGINT NOT NULL,
     joined TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     reason TEXT,
+    PRIMARY KEY (client, channel),
     FOREIGN KEY (client) REFERENCES users.accounts ("id"),
     FOREIGN KEY (channel) REFERENCES channels.index ("id")
 );
@@ -87,27 +88,29 @@ CREATE TABLE channels.users2groups (
 CREATE TABLE channels.permissions_users (
     client BIGINT NOT NULL,
     channel BIGINT NOT NULL,
-    permission INTEGER NOT NULL,
+    permission SMALLINT NOT NULL,
     status BOOLEAN,
     PRIMARY KEY (client, channel, permission),
     FOREIGN KEY (client) REFERENCES users.accounts ("id"),
-    FOREIGN KEY (channel) REFERENCES channels.index ("id")
+    FOREIGN KEY (channel) REFERENCES channels.index ("id"),
+    FOREIGN KEY (permission) REFERENCES channels.permissions ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE channels.permissions_groups (
     "group" BIGINT NOT NULL,
     channel BIGINT NOT NULL,
-    permission INTEGER NOT NULL,
+    permission SMALLINT NOT NULL,
     status BOOLEAN,
     PRIMARY KEY ("group", channel, permission),
     FOREIGN KEY ("group") REFERENCES channels."groups" ("id") ON DELETE CASCADE,
-    FOREIGN KEY (channel) REFERENCES channels.index ("id")
+    FOREIGN KEY (channel) REFERENCES channels.index ("id"),
+    FOREIGN KEY (permission) REFERENCES channels.permissions ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE channels.invitations (
     creator BIGINT NOT NULL,
     channel BIGINT NOT NULL,
-    uri TEXT DEFAULT substring(md5(public.uuid_generate_v4()::text), 0, 9) PRIMARY KEY,
+    uri TEXT DEFAULT substring(md5(public.uuid_generate_v4()::TEXT), 0, 9) PRIMARY KEY,
     created TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT TIMEZONE('UTC', now()),
     expiration TIMESTAMP WITHOUT TIME ZONE,
     permitted_uses INTEGER,
@@ -115,5 +118,5 @@ CREATE TABLE channels.invitations (
     enabled BOOLEAN NOT NULL DEFAULT TRUE,
     FOREIGN KEY (creator) REFERENCES users.accounts ("id"),
     FOREIGN KEY (channel) REFERENCES channels.index ("id"),
-    CHECK (COALESCE(permitted_uses, 'Infinity'::NUMERIC) > total_uses)
+    CHECK (COALESCE(permitted_uses, 'Infinity'::NUMERIC) >= total_uses)
 );
