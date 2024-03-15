@@ -1,39 +1,43 @@
-CREATE FUNCTION channels."create" ("owner" BIGINT, title TEXT)
+CREATE OR REPLACE FUNCTION "channels"."create" ("owner" BIGINT, "title" TEXT, "is_public" BOOLEAN)
 RETURNS BIGINT AS $$
 DECLARE
-    channel_id BIGINT;
+    "channel_id" BIGINT;
 BEGIN
-    INSERT INTO channels."index" ("owner", title, created)
-    VALUES ("owner", title, TIMEZONE('UTC', now()))
-    RETURNING "id" INTO channel_id;
-
-    INSERT INTO channels.users (client, channel, joined, reason)
+    INSERT INTO
+        "channels"."index" (
+            "owner",
+            "title",
+            "created",
+            "public"
+        )
     VALUES
-        (0, channel_id, TIMEZONE('UTC', now()), 'CREATE CHANNEL'),
-        ("owner", channel_id, TIMEZONE('UTC', now()) + '5 ms'::INTERVAL, 'CREATE CHANNEL');
+        ("owner", "title", TIMEZONE('UTC', now()), "is_public")
+    RETURNING "id" INTO "channel_id";
 
-    INSERT INTO channels.messages (channel, posted, author, alias, "type")
+    INSERT INTO
+        "channels"."users" (
+            "client",
+            "channel",
+            "status"
+        )
     VALUES
-        (channel_id, TIMEZONE('UTC', now()), 0, public.uuid_nil(), 'SYSTEM'),
-        (channel_id, TIMEZONE('UTC', now()) + '5 ms'::INTERVAL, "owner", public.uuid_nil(), 'SYSTEM');
+        ("owner", "channel_id", 1);
 
-    INSERT INTO channels.messages_data (channel, original, edited, "data", version)
-    VALUES
-        (channel_id, TIMEZONE('UTC', now()), TIMEZONE('UTC', now()), '@events/system/channels/create', 1),
-        (channel_id, TIMEZONE('UTC', now()) + '5 ms'::INTERVAL, TIMEZONE('UTC', now()) + '5 ms'::INTERVAL, '@events/system/channels/create', 1);
+    EXECUTE format('
+        CREATE SEQUENCE channels.channel_%s_messages_ids_sequence
+            AS BIGINT
+            INCREMENT BY 1
+            MINVALUE 1
+            NO MAXVALUE
+            START WITH 2
+            NO CYCLE
+    ', "channel_id"::TEXT);
 
-    RETURN channel_id;
+    RETURN "channel_id";
 END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE FUNCTION channels.is_client_in_channel (target_client BIGINT, target_channel BIGINT)
-RETURNS BOOLEAN AS $$
-    SELECT EXISTS (
-        SELECT *
-        FROM channels.users
-        WHERE
-            client = target_client AND
-            channel = target_channel
-    )
-$$ LANGUAGE sql;
+
+
+SELECT * FROM channels."index"
