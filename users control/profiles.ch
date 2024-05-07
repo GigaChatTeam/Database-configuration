@@ -6,7 +6,10 @@ CREATE TABLE `users`.`profiles` (
     `nickname` String,
     `avatar` Int64,
     `description` String,
-    `status` Enum ('disabled' = -1, 'enabled' = 1),
+    `status` Enum (
+        'disabled' = -1,
+        'enabled' = 1
+    ),
 )
 ENGINE = MergeTree
 ORDER BY (`timestamp`)
