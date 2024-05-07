@@ -1,19 +1,31 @@
-CREATE FUNCTION "channels"."create_invitation" ("target_client" BIGINT, "target_channel" BIGINT, "selected_expiration" TIMESTAMP, "selected_permitted_uses" INTEGER)
-RETURNS TEXT AS $$
-BEGIN
+CREATE FUNCTION "channels"."create-invitation" (
+    "selected-uri" TEXT,
+    "target-channel" BIGINT,
+    "target-owner" BIGINT,
+    "selected-expiration" TIMESTAMP WITHOUT TIME ZONE,
+    "selected-permitted-uses" INTEGER)
+RETURNS VOID AS $$
     INSERT INTO
         "channels"."invitations" (
-
+            "uri",
+            "channel",
+            "creator",
+            "created",
+            "permitted-uses",
+            "expiration",
+            "total-uses",
+            "enabled"
         )
-END;
+    VALUES
+        ("selected-uri", "target-channel", "target-owner", TIMEZONE('utc', now()), 0, "selected-expiration", 0, TRUE)
 $$ LANGUAGE sql;
 
-CREATE FUNCTION channels.delete_invitation (invitation_uri TEXT)
+CREATE FUNCTION "channels"."delete-invitation" ("invitation-uri" TEXT)
 RETURNS VOID AS $$
     UPDATE
-        channels.invitations
+        "channels"."invitations"
     SET
-        enabled = FALSE
+        "enabled" = FALSE
     WHERE
-        uri = invitation_uri
+        "channels"."invitations"."uri" = "invitation-uri"
 $$ LANGUAGE sql;

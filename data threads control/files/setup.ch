@@ -1,4 +1,4 @@
-CREATE TABLE files.events (
+CREATE TABLE `files`.`events` (
     `event-name` String,
     `event-version` String,
     `event-source` String,

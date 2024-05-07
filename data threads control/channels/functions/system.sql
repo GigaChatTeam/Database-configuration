@@ -1,18 +1,24 @@
-CREATE OR REPLACE FUNCTION "channels"."create" ("owner" BIGINT, "title" TEXT, "is_public" BOOLEAN)
+CREATE FUNCTION "channels"."create" (
+    "owner" BIGINT,
+    "title" TEXT,
+    "description" TEXT,
+    "is-public" BOOLEAN
+)
 RETURNS BIGINT AS $$
 DECLARE
-    "channel_id" BIGINT;
+    "channel-id" BIGINT;
 BEGIN
     INSERT INTO
         "channels"."index" (
             "owner",
             "title",
+            "description",
             "created",
             "public"
         )
     VALUES
-        ("owner", "title", TIMEZONE('UTC', now()), "is_public")
-    RETURNING "id" INTO "channel_id";
+        ("owner", "title", "description", TIMEZONE('UTC', now()), "is-public")
+    RETURNING "id" INTO "channel-id";
 
     INSERT INTO
         "channels"."users" (
@@ -21,23 +27,38 @@ BEGIN
             "status"
         )
     VALUES
-        ("owner", "channel_id", 1);
+        ("owner", "channel-id", 1);
+
+    INSERT INTO
+        "channels"."groups" (
+            "channel",
+            "primacy",
+            "denomination"
+        )
+    VALUES
+        ("channel-id", 32767, 'owner'),
+        ("channel-id", 0, 'everyone');
+
+    INSERT INTO
+        "channels"."users2groups" (
+            "channel",
+            "primacy",
+            "client"
+        )
+    VALUES
+        ("channel-id", 32767, "owner"),
+        ("channel-id", 0, "owner");
 
     EXECUTE format('
-        CREATE SEQUENCE channels.channel_%s_messages_ids_sequence
+        CREATE SEQUENCE "channels"."channel-%s_messages"
             AS BIGINT
             INCREMENT BY 1
             MINVALUE 1
             NO MAXVALUE
-            START WITH 2
+            START WITH 1
             NO CYCLE
-    ', "channel_id"::TEXT);
+    ', "channel-id"::TEXT);
 
-    RETURN "channel_id";
+    RETURN "channel-id";
 END;
 $$ LANGUAGE plpgsql;
-
-
-
-
-SELECT * FROM channels."index"
