@@ -10,7 +10,7 @@ CREATE TABLE "users"."accounts" (
             CHECK ("password" ~ '^\$2[ayb]\$.{56}$'),
     "created" TIMESTAMP WITHOUT TIME ZONE
         NOT NULL
-        DEFAULT TIMEZONE('UTC', now()),
+        DEFAULT TIMEZONE('UTC', now())
 );
 
 -- User for system messages
@@ -45,5 +45,5 @@ CREATE TABLE "users"."tokens" (
         NOT NULL,
     CONSTRAINT "users.tokens-FK-userID" FOREIGN KEY ("user-id") REFERENCES "users"."accounts" ("id"),
     CONSTRAINT "users.tokens-system-validBCryptHashOnTokenParts"
-        CHECK (("first" ~ '^\$2[ayb]\$.{56}$') AND ("second" ~ '^\$2[ayb]\$.{56}$')),
+        CHECK (("first" ~ '^\$2[ayb]\$.{56}$') AND ("second" ~ '^\$2[ayb]\$.{56}$'))
 );
