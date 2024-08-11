@@ -17,7 +17,7 @@ CREATE TABLE "users"."accounts" (
 INSERT INTO
     "users"."accounts" ("id", "username", "password", "created")
 VALUES
-    (0, 'system', 'password', '2023-09-01 11:00:00'::TIMESTAMP WITHOUT TIME ZONE);
+    (0, 'system', '$2a$00$00000000000000000000000000000000000000000000000000000', '2023-09-01 11:00:00'::TIMESTAMP WITHOUT TIME ZONE);
 
 CREATE TABLE "users"."profiles" (
     "user-id" BIGINT
@@ -28,7 +28,7 @@ CREATE TABLE "users"."profiles" (
         CONSTRAINT "users.profiles-logic-notEmptyNickname" CHECK (length("username") > 0),
     "avatar-id" BIGINT,
     "description" TEXT,
-    PRIMARY KEY ("user-id", "version")
+    PRIMARY KEY ("user-id", "version"),
     CONSTRAINT "users.profiles-FK-userID" FOREIGN KEY ("user-id") REFERENCES "users"."accounts" ("id")
 );
 
