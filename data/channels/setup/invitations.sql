@@ -2,11 +2,9 @@ CREATE TABLE "channels"."invitations" (
     "uri-code" TEXT
         PRIMARY KEY,
     "channel-id" BIGINT
-        NOT NULL
-        CONSTRAINT "channels.invitations-FK-channelID" FOREIGN KEY ("channel-id") REFERENCES "channels"."index" ("id"),
+        NOT NULL,
     "creator-id" BIGINT
-        NOT NULL
-        CONSTRAINT "channels.invitations-FK-creatorID" FOREIGN KEY ("owner-id") REFERENCES "users"."accounts" ("id"),
+        NOT NULL,
     "created-at" TIMESTAMP WITHOUT TIME ZONE
         NOT NULL
         DEFAULT TIMEZONE('UTC', now()),
@@ -19,5 +17,6 @@ CREATE TABLE "channels"."invitations" (
     "enabled" BOOLEAN
         NOT NULL
         DEFAULT TRUE,
-    CONSTRAINT "channels.invitations-logic-permittedUsesAboveTotalUses" CHECK ("permitted-uses" >= "total-uses")
+    CONSTRAINT "channels.invitations-logic-permittedUsesAboveTotalUses" CHECK ("permitted-uses" >= "total-uses"),
+    CONSTRAINT "channels.invitations-FK-channelID" FOREIGN KEY ("channel-id") REFERENCES "channels"."index" ("id")
 );

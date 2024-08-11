@@ -1,11 +1,9 @@
 CREATE TABLE "channels"."users" (
-    "channel" BIGINT
+    "channel-id" BIGINT
         NOT NULL,
-    "client" BIGINT
+    "user-id" BIGINT
         NOT NULL,
-    PRIMARY KEY ("channel", "client"),
-    FOREIGN KEY ("channel")
-        REFERENCES "channels"."index" ("id"),
-    FOREIGN KEY ("client")
-        REFERENCES "users"."accounts" ("id")
+    PRIMARY KEY ("channel-id", "user-id"),
+    CONSTRAINT "channels.users-FK-channelID" FOREIGN KEY ("channel-id") REFERENCES "channels"."index" ("id"),
+    CONSTRAINT "channels.users-FK-userID" FOREIGN KEY ("user-id") REFERENCES "users"."accounts" ("id")
 );
