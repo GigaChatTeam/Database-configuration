@@ -25,7 +25,7 @@ CREATE TABLE "users"."profiles" (
     "version" SMALLINT
         NOT NULL,
     "nickname" TEXT
-        CONSTRAINT "users.profiles-logic-notEmptyNickname" CHECK (length("username") > 0),
+        CONSTRAINT "users.profiles-logic-notEmptyNickname" CHECK (length("nickname") > 0),
     "avatar-id" BIGINT,
     "description" TEXT,
     PRIMARY KEY ("user-id", "version"),
