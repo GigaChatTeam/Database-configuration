@@ -11,6 +11,6 @@ CREATE TABLE "channels"."messages" (
         NOT NULL,
     "answer-to" BIGINT,
     CONSTRAINT "channels.messages-FK-channelID" FOREIGN KEY ("channel-id") REFERENCES "channels"."index" ("id"),
-    CONSTRAINT "channels.messages-FK-authorID" FOREIGN KEY ("author-id") REFERENCES "users"."index" ("id"),
+    CONSTRAINT "channels.messages-FK-authorID" FOREIGN KEY ("author-id") REFERENCES "users"."accounts" ("id"),
     CONSTRAINT "channels.messages-SFK-answerTo" FOREIGN KEY ("channel-id", "answer-to") REFERENCES "channels"."messages" ("channel-id", "id")
 );
