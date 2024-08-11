@@ -3,10 +3,10 @@ CREATE TABLE "channels"."invitations" (
         PRIMARY KEY,
     "channel-id" BIGINT
         NOT NULL
-        CONSTRAINT "hannels.invitations-FK-channelID" FOREIGN KEY ("channel-id") REFERENCES "channels"."index" ("id"),
+        CONSTRAINT "channels.invitations-FK-channelID" FOREIGN KEY ("channel-id") REFERENCES "channels"."index" ("id"),
     "creator-id" BIGINT
         NOT NULL
-        CONSTRAINT "hannels.invitations-FK-creatorID" FOREIGN KEY ("owner-id") REFERENCES "users"."accounts" ("id"),
+        CONSTRAINT "channels.invitations-FK-creatorID" FOREIGN KEY ("owner-id") REFERENCES "users"."accounts" ("id"),
     "created-at" TIMESTAMP WITHOUT TIME ZONE
         NOT NULL
         DEFAULT TIMEZONE('UTC', now()),
@@ -21,7 +21,3 @@ CREATE TABLE "channels"."invitations" (
         DEFAULT TRUE,
     CONSTRAINT "channels.invitations-logic-permittedUsesAboveTotalUses" CHECK ("permitted-uses" >= "total-uses")
 );
-
-SELECT "channels"."create-invitation"('penis'::TEXT, 2, 2, NULL, NULL)
-
-COMMIT
