@@ -1,26 +1,25 @@
 CREATE TABLE "channels"."invitations" (
-    "uri" TEXT
+    "uri-code" TEXT
         PRIMARY KEY,
-    "channel" BIGINT
-        NOT NULL,
-    "creator" BIGINT
-        NOT NULL,
-    "created" TIMESTAMP WITHOUT TIME ZONE
+    "channel-id" BIGINT
+        NOT NULL
+        CONSTRAINT "hannels.invitations-FK-channelID" FOREIGN KEY ("channel-id") REFERENCES "channels"."index" ("id"),
+    "creator-id" BIGINT
+        NOT NULL
+        CONSTRAINT "hannels.invitations-FK-creatorID" FOREIGN KEY ("owner-id") REFERENCES "users"."accounts" ("id"),
+    "created-at" TIMESTAMP WITHOUT TIME ZONE
         NOT NULL
         DEFAULT TIMEZONE('UTC', now()),
-    "expiration" TIMESTAMP WITHOUT TIME ZONE,
+    "expiration-at" TIMESTAMP WITHOUT TIME ZONE,
     "permitted-uses" INTEGER,
     "total-uses" INTEGER
         NOT NULL
+        CONSTRAINT "channels.invitations-logic-positiveTotalUses" CHECK ("permitted-uses" >= 0)
         DEFAULT 0,
     "enabled" BOOLEAN
         NOT NULL
         DEFAULT TRUE,
-    FOREIGN KEY ("creator")
-        REFERENCES "users"."accounts" ("id"),
-    FOREIGN KEY ("channel")
-        REFERENCES "channels"."index" ("id"),
-    CHECK ("permitted-uses" >= "total-uses")
+    CONSTRAINT "channels.invitations-logic-permittedUsesAboveTotalUses" CHECK ("permitted-uses" >= "total-uses")
 );
 
 SELECT "channels"."create-invitation"('penis'::TEXT, 2, 2, NULL, NULL)
