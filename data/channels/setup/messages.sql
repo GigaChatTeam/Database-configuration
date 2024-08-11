@@ -6,7 +6,7 @@ CREATE TABLE "channels"."messages" (
         NOT NULL,
     "created-at" TIMESTAMP WITHOUT TIME ZONE
         NOT NULL
-        DEFAULT TIMEZONE('UTC', now())
+        DEFAULT TIMEZONE('UTC', now()),
     "text" TEXT
         NOT NULL,
     "answer-to" BIGINT,
